@@ -17,6 +17,22 @@ public class GraphModel {
 		Xlen = graph[0].length;
 	}
 	
+	public GraphModel(int[][] adjArray) {
+		this(arrIntToBool(adjArray));
+	}
+	
+	private static boolean[][] arrIntToBool(int[][] adjArray) {
+		boolean[][] boolArray = new boolean[adjArray.length][];
+		for(int i = 0; i < boolArray.length; i++) {
+			boolArray[i] = new boolean[adjArray[0].length];
+			for (int j = 0; j < boolArray[i].length; j++) {
+				boolArray[i][j] = (adjArray[i][j] == 1);
+			}
+		}
+		
+		return boolArray;
+	}
+
 	/*
 	 * Find the maximum matching in graph and return edges in it.
 	 */
@@ -66,7 +82,7 @@ public class GraphModel {
 						Yprev.put(i, x);
 						if (!matchY[i]) {
 							relight(i, Yprev, Xprev, lights);
-							rematch(lights, matchY, matchX);
+							rematch(graph, lights, matchX, matchY);
 							isFoundChain = true;
 							break;
 						}
@@ -109,12 +125,10 @@ public class GraphModel {
 		}
 	}
 	
-	private void rematch(boolean[][] lights, boolean[] matchX, boolean[] matchY) {
-		matchX = new boolean[matchX.length];
-		matchY = new boolean[matchY.length];
+	private void rematch(boolean[][] graph, boolean[][] lights, boolean[] matchX, boolean[] matchY) {
 		for (int i = 0; i < matchY.length; i++) {
 			for (int j = 0; j < matchX.length; j++) {
-				if (!lights[i][j]) {
+				if (!lights[i][j] && graph[i][j]) {
 					matchY[i] = true;
 					matchX[j] = true;
 				}

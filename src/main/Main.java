@@ -3,6 +3,11 @@
  */
 package main;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -13,21 +18,18 @@ public class Main {
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		InputStream reader = new FileInputStream("in.txt");
+		int[][] graphArr = GraphParser.getAdjArray(reader);
 		
-		boolean[][] lights = new boolean[2][];
-		lights[0] = new boolean[] {true, false};
-		lights[1] = new boolean[] {true, true};
-		
-		GraphModel graph = new GraphModel(lights);
+		GraphModel graph = new GraphModel(graphArr);
 		
 		List<Edge> edges = graph.FindMaxMatching();
-		
-		System.out.println(edges.size());
-		for (Edge edge : edges) {
-			System.out.println(String.format("(%1d, %2d)", edge.From, edge.To));
-		}
+
+		OutputStream writer = new FileOutputStream("out.txt");
+		GraphParser.printAdjArr(edges, writer, graphArr.length);
 
 	}
 
