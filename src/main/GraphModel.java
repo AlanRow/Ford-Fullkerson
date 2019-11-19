@@ -56,11 +56,12 @@ public class GraphModel {
 		boolean[] matchX = new boolean[Xlen];
 		boolean[] matchY = new boolean[Ylen];
 		
+		//previous maps
+		Map<Integer, Integer> Xprev = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> Yprev = new HashMap<Integer, Integer>();
+		
 		//Step 2: Start loop - while is any in both queues
 		while (!X.isEmpty() || !Y.isEmpty()) {
-			//previous maps
-			Map<Integer, Integer> Xprev = new HashMap<Integer, Integer>();
-			Map<Integer, Integer> Yprev = new HashMap<Integer, Integer>();
 			
 			//Step 3: Start subloop - for X, while X not empty
 			boolean isFoundChain = false;
@@ -68,8 +69,8 @@ public class GraphModel {
 				int x = X.poll();
 				
 				//if x matched then continue it
-				if (matchX[x])
-					continue;
+				//if (matchX[x])
+					//continue;
 				
 				//if x first, then mark it as walked
 				if (Xprev.get(x) == null) {
@@ -82,6 +83,9 @@ public class GraphModel {
 						Yprev.put(i, x);
 						if (!matchY[i]) {
 							relight(i, Yprev, Xprev, lights);
+							Yprev.clear();
+							Xprev.clear();
+							Y.clear();
 							rematch(graph, lights, matchX, matchY);
 							isFoundChain = true;
 							break;
@@ -91,7 +95,7 @@ public class GraphModel {
 				}
 			}
 			//Step 4: Start subloop - for Y, while Y not empty
-			while (!Y.isEmpty()) {
+			while (!Y.isEmpty() && !isFoundChain) {
 				int y = Y.poll();
 				//Step 4.1: sub-sub-loop for x from X, that adj. to y and edge is dark
 				for (int i = 0; i < Xlen; i++) {
