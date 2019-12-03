@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,6 +88,8 @@ public class GraphModel {
 							Xprev.clear();
 							Y.clear();
 							rematch(graph, lights, matchX, matchY);
+							refound(matchX, X);
+							refound(matchY, Y);
 							isFoundChain = true;
 							break;
 						}
@@ -114,6 +117,8 @@ public class GraphModel {
 						 Map<Integer, Integer> Xprev, boolean[][] lights) {
 		int cur = last;
 		boolean isY = true;
+		String path = "";
+		int lastN = 0;
 		
 		while((isY && Yprev.get(cur) != -1) || (!isY && Xprev.get(cur) != -1)) {
 			int prev = (isY) ? Yprev.get(cur) : Xprev.get(cur);
@@ -124,9 +129,13 @@ public class GraphModel {
 				lights[prev][cur] = true;
 			}
 			
+			path += cur + ", ";
 			cur = prev;
+			lastN = cur;
 			isY = !isY;
 		}
+			
+		System.out.println(path + " " + lastN);
 	}
 	
 	private void rematch(boolean[][] graph, boolean[][] lights, boolean[] matchX, boolean[] matchY) {
@@ -136,6 +145,16 @@ public class GraphModel {
 					matchY[i] = true;
 					matchX[j] = true;
 				}
+			}
+		}
+	}
+	
+	private void refound(boolean[] matches, Queue<Integer> nodes){
+		for (int i = 0; i < matches.length; i++){
+			if (!(matches[i] || nodes.contains(i))){
+				nodes.add(i);
+			} else if (matches[i] && nodes.contains(i)){
+				nodes.remove(i);
 			}
 		}
 	}
