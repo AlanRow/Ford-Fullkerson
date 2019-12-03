@@ -117,8 +117,6 @@ public class GraphModel {
 						 Map<Integer, Integer> Xprev, boolean[][] lights) {
 		int cur = last;
 		boolean isY = true;
-		String path = "";
-		int lastN = 0;
 		
 		while((isY && Yprev.get(cur) != -1) || (!isY && Xprev.get(cur) != -1)) {
 			int prev = (isY) ? Yprev.get(cur) : Xprev.get(cur);
@@ -129,13 +127,9 @@ public class GraphModel {
 				lights[prev][cur] = true;
 			}
 			
-			path += cur + ", ";
 			cur = prev;
-			lastN = cur;
 			isY = !isY;
 		}
-			
-		System.out.println(path + " " + lastN);
 	}
 	
 	private void rematch(boolean[][] graph, boolean[][] lights, boolean[] matchX, boolean[] matchY) {
